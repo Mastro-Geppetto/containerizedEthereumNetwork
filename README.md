@@ -15,11 +15,11 @@ This setup was tested on Windows & Ubuntu.
 It is 4+ gb download and takes 20-30min installation time.
 
    [click here to know the reason](https://wiki.python.org/moin/WindowsCompilers#Microsoft_Visual_C.2B-.2B-_14.0_standalone:_Build_Tools_for_Visual_Studio_2017_.28x86.2C_x64.2C_ARM.2C_ARM64.29)
-4. Install git
-5. On Windows install git bash or cygwin. Linux users can skip this step.
-6. Clone this repository : ```git clone https://github.com/Mastro-Geppetto/containerizedEthereumNetwork.git```
-7. Update python : ```pip install --upgrade setuptools```
-8. Change directory to the cloned git repo directory
+4. Install [git](https://git-scm.com/download/win)
+5. On Windows install [git bash](https://git-scm.com/download/win) or cygwin. Linux users can skip this step.
+6. Clone my repository : ```git clone https://github.com/Mastro-Geppetto/containerizedEthereumNetwork.git```
+7. Update python setuptools : ```pip install --upgrade setuptools```
+8. Change directory to the cloned git repo directory.
 9. Install python libs to interact with Ethereum Network : ```pip install -r requirements.txt```
 10. Check docker is running : ```docker images```
 
@@ -28,6 +28,7 @@ It is 4+ gb download and takes 20-30min installation time.
 2. We have a number of docker image options from custom docker image to official image.
 3. Build Custom image with name *local/ethereumbase:latest*: ```docker build -t "local/ethereumbase:latest" -f ./Dockerfile .```
 4. Instead to use official ```Dockerfile-official-alltools-image``` build with ```docker build -t "ocal/ethereumbase:latest" -f ./Dockerfile-official-alltools-image .```
+5. Check Docker image ```docker images```
 
 ## Start network
 - In bash shell change directory to cloned directory.
@@ -39,6 +40,8 @@ It is 4+ gb download and takes 20-30min installation time.
   - **Note: genesis.json is present in [common folder](https://github.com/Mastro-Geppetto/containerizedEthereumNetwork/tree/master/common)**
 - This network has 9 prefilled accounts. Check [keystore](https://github.com/Mastro-Geppetto/containerizedEthereumNetwork/tree/master/common/keystore).
   - Out of that first four are used by bootnode, 2 miners & 1 eth node.
+  - [Google Genesis ethereum](https://www.google.com/search?q=genesis+block+ethereum)
+  - [What is Mining in ethereum ?](https://github.com/ethereum/wiki/wiki/Mining#introduction)
   
 ## Interact with network using command line in nodes
 - **Miner node**
