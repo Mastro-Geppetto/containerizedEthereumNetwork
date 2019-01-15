@@ -1,0 +1,17 @@
+
+# THIS IS A COMMON FILE FOR PYTHON AND BASH SCRIPT #
+
+### IMAGE NAME ####
+#image_name="ethereum/client-go:alltools-stable"
+image_name="local/ethereumbase:latest"
+
+### SPACE SEPERATED INSTANCE NAMES ####
+# we have 1 bootnode 2 miner 1 eth
+container_list="bootnode miner_1 miner_2 eth"
+
+### NETWORK NAME ###
+net_name="ether_priv_net"
+
+### RPC : HTTP port ###
+ETH_HTTP_RPC_PORT='8545'
+ETH_LOCAL_MACHINE_IP='127.0.0.1'

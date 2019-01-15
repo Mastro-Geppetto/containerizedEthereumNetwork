@@ -1,0 +1,38 @@
+import requests
+import os
+import sys
+import logging
+from subprocess import call
+# add local include path
+import include
+
+# Initialize logger
+logger = logging.getLogger(__name__)
+
+# 1. check if we are on docker-machine, get IP ADDRESS
+if os.environ.get('DOCKER_MACHINE_NAME'):
+  IP=os.environ.get('DOCKER_HOST')
+  if IP is None:
+    logger.error("Couldn't get DOCKER_HOST IP address")
+    sys.exit(1)
+  IP.split(':')[1].strip('/')
+  include.ETH_LOCAL_MACHINE_IP=IP
+
+# create persistent HTTP connection
+session = requests.Session()
+
+# as defined in https://github.com/ethereum/wiki/wiki/JSON-RPC#net_version
+method = 'net_version'
+params = []
+payload= {"jsonrpc":"2.0",
+           "method":method,
+           "params":params,
+           "id":1}
+
+headers = {'Content-type': 'application/json'}
+
+response = session.post('http://'+include.ETH_LOCAL_MACHINE_IP+
+                        ':'+include.ETH_HTTP_RPC_PORT,
+                        json=payload, headers=headers)
+print('raw json response: {}'.format(response.json()))
+print('network id: {}'.format(response.json()['result']))

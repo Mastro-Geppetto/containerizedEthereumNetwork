@@ -1,0 +1,58 @@
+#!/bin/bash
+
+. ./include
+
+#########################################
+# cleanup previous network
+prevNetworkId=$(docker network ls --filter NAME=$net_name --format "{{.ID}}")
+echo "Cleaning previous network Id $prevNetworkId"
+docker network remove $prevNetworkId 2>/dev/null
+# create network
+echo "Recreating internal bridge network : $net_name so that bootnode has IP:172.28.5.2"
+docker network create \
+ --driver bridge  \
+ --subnet=172.28.5.0/24 \
+ --ip-range=172.28.5.2/24 \
+ --gateway=172.28.5.1 \
+ $net_name
+echo ""
+##########################################
+
+##########################################
+for i in $container_list
+do
+  # cleanup prev containers
+  prevContainer=$(docker ps -a --filter name=$i --format "{{.ID}}")
+  echo "Stopping or clearing prev $i container ID:$prevContainer if present"
+  docker container rm $prevContainer -f 2>/dev/null
+
+  if [ -z $(docker volume ls --filter NAME=$i"_vol" --format "{{.Name}}") ]; then
+    echo "----> create volume drive [$i""_vol] for $i "
+    docker volume create $i"_vol"
+  fi
+    
+  echo "------------------- Starting $i container ---------------"
+  OTHER_OPT=""
+  if [ $i == "bootnode" ]; then # open port for discovery service 
+    OTHER_OPT="-p 30303:30303 -p 30303:30303/udp";
+  else
+     if [ $i == "eth" ]; then # open port to interact 
+       OTHER_OPT="-p 8545:8545 --link bootnode "
+     else # miners
+       OTHER_OPT="--link bootnode";fi
+  fi
+  docker run --detach \
+       --network=$net_name --name=$i --hostname=$i \
+       --volume=/etc/localtime:/etc/localtime:ro \
+       --volume="$PWD/storage/$i/password:/root/password:ro"  \
+       --volume="$PWD/storage/$i/keystore:/root/keystore" \
+       --volume="$PWD/storage/$i/start.sh:/root/start.sh" \
+       -v $i"_vol":/root/.ethereum \
+       $OTHER_OPT \
+       --workdir="/root" \
+       --entrypoint "/root/start.sh" \
+       $image_name
+       #--volume="$PWD/storage/$i/genesis.json:/root/genesis.json:ro" \
+done
+##########################################
+

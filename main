@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source ./include
+
+echo python utils.py "$@"
+python utils.py "$@"

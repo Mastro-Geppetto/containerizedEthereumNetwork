@@ -1,0 +1,20 @@
+#!/bin/bash
+
+. ./include
+
+#########################################
+# cleanup previous network
+#prevNetworkId=$(docker network ls --filter NAME=$net_name --format "{{.ID}}")
+#echo "Cleaning previous network Id $prevNetworkId"
+#docker network remove $prevNetworkId 2>/dev/null
+echo ""
+##########################################
+
+##########################################
+for i in $container_list
+do
+  # cleanup prev containers
+  prevContainer=$(docker ps -a --filter name=$i --format "{{.ID}}")
+  echo "Stopping $i container ID:$prevContainer "
+  docker kill $prevContainer 
+done
